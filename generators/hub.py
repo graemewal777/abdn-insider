@@ -163,12 +163,14 @@ def generate_hub(data: dict) -> str:
             justify-content: space-between;
             align-items: stretch;
             gap: 16px;
+            overflow: hidden;
         }}
         .aberdeen-left {{
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             min-width: 0;
+            overflow: hidden;
         }}
         .aberdeen-badge {{
             display: inline-flex;
@@ -191,12 +193,15 @@ def generate_hub(data: dict) -> str:
         }}
         .aberdeen-city {{
             font-family: 'Syne', sans-serif;
-            font-size: 56px;
+            font-size: clamp(28px, 9vw, 46px);
             font-weight: 800;
             text-transform: uppercase;
             line-height: 0.88;
             letter-spacing: -0.03em;
             color: var(--pitch);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
         }}
         .aberdeen-meta {{
             font-size: 11px;
@@ -204,8 +209,9 @@ def generate_hub(data: dict) -> str:
             letter-spacing: 0.08em;
             color: var(--pitch);
             margin-top: 12px;
-            line-height: 1.5;
+            line-height: 1.7;
             opacity: 0.7;
+            white-space: nowrap;
         }}
         .aberdeen-right {{
             display: flex;
@@ -376,8 +382,8 @@ def generate_hub(data: dict) -> str:
                 <div class="aberdeen-city">Aberdeen</div>
             </div>
             <div class="aberdeen-meta">
-                {event_count} EVENTS · UPDATED FRI {date_display}<br>
-                SCOTLAND
+                {event_count} EVENTS · SCOTLAND<br>
+                FRI {date_display}
             </div>
         </div>
         <div class="aberdeen-right">
