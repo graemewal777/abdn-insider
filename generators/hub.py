@@ -1,9 +1,9 @@
 """
 Aberdeen Insider — Hub Page Generator
-Generates docs/index.html — a permanent landing page that never changes URL.
-This is the link you put in your Instagram bio, forever.
+Generates docs/index.html — permanent landing page, desktop-first design.
+Bio link that never changes URL.
 
-Output: docs/index.html  (served by GitHub Pages at the permanent URL)
+Output: docs/index.html (served by GitHub Pages)
 """
 
 import json
@@ -37,16 +37,16 @@ def _ga4_snippet(tracking_id: str) -> str:
     </script>"""
 
 
-def _coming_soon_row(city: dict) -> str:
+def _city_row(city: dict) -> str:
     return f"""
-        <div class="city-row">
-            <div class="city-row-inner">
-                <span class="city-num">{city["number"]}</span>
-                <span class="city-label">Coming Soon</span>
-                <span class="city-name">{city["name"].upper()}</span>
+          <div class="city-row">
+            <div class="city-row-left">
+              <span class="city-num">{city["number"]}</span>
+              <span class="city-pill">Coming Soon</span>
+              <span class="city-name">{city["name"].upper()}</span>
             </div>
             <span class="city-arrow">→</span>
-        </div>"""
+          </div>"""
 
 
 def generate_hub(data: dict) -> str:
@@ -63,377 +63,369 @@ def generate_hub(data: dict) -> str:
         week_label   = week_of.upper()
 
     linkinbio_url    = f"linkinbio-{week_of}.html"
-    coming_soon_html = "".join(_coming_soon_row(c) for c in COMING_SOON_CITIES)
+    cities_html      = "".join(_city_row(c) for c in COMING_SOON_CITIES)
     ga4_html         = _ga4_snippet(GA_TRACKING_ID)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aberdeen Insider — Your City. This Week.</title>
-    <meta name="description" content="Aberdeen events, new openings and local tips — every Friday. No filler.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">{ga4_html}
-    <style>
-        *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aberdeen Insider — Your City. This Week.</title>
+  <meta name="description" content="Aberdeen events, new openings and local tips — every Friday. No filler.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">{ga4_html}
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
-        :root {{
-            --pitch:     #0A0A0A;
-            --parchment: #F5F0E8;
-            --strike:    #FFE500;
-            --granite:   #8C8C8C;
-            --mist:      #EDE9E1;
-            --border:    3px solid #0A0A0A;
-        }}
+    :root {{
+      --pitch:     #0A0A0A;
+      --parchment: #F5F0E8;
+      --strike:    #FFE500;
+      --granite:   #8C8C8C;
+      --mist:      #EDE9E1;
+    }}
 
-        html, body {{
-            background: var(--pitch);
-            color: var(--pitch);
-            font-family: 'DM Mono', monospace;
-        }}
+    html {{
+      background: var(--pitch);
+      min-height: 100%;
+    }}
 
-        .page {{
-            background: var(--parchment);
-            max-width: 1200px;
-            margin: 0 auto;
-            min-height: 100vh;
-            border-left: var(--border);
-            border-right: var(--border);
-        }}
+    body {{
+      font-family: 'DM Mono', monospace;
+      background: var(--pitch);
+      color: var(--pitch);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }}
 
-        a {{ text-decoration: none; color: inherit; }}
+    a {{ text-decoration: none; color: inherit; display: block; }}
 
-        /* ── Header ─────────────────────────────────────────────────── */
-        .header {{
-            background: var(--pitch);
-            border-bottom: var(--border);
-        }}
-        .header-accent {{
-            background: var(--strike);
-            height: 6px;
-        }}
-        .header-inner {{
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            padding: 32px 48px 28px;
-            gap: 24px;
-        }}
-        .header-left {{
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }}
-        .header-eyebrow {{
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--strike);
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-        }}
-        .header-title {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(40px, 5vw, 72px);
-            font-weight: 800;
-            color: var(--parchment);
-            text-transform: uppercase;
-            line-height: 0.9;
-            letter-spacing: -0.03em;
-        }}
-        .header-week {{
-            font-size: 12px;
-            color: var(--granite);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            align-self: flex-end;
-            white-space: nowrap;
-            padding-bottom: 6px;
-        }}
+    /* ── Page shell ─────────────────────────────────────────── */
+    .page {{
+      width: 100%;
+      max-width: 1200px;
+      background: var(--parchment);
+      border-left: 3px solid var(--pitch);
+      border-right: 3px solid var(--pitch);
+      display: flex;
+      flex-direction: column;
+    }}
 
-        /* ── Aberdeen Hero ───────────────────────────────────────────── */
-        .aberdeen-hero {{
-            background: var(--strike);
-            border-bottom: var(--border);
-            padding: 40px 48px 44px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }}
-        .hero-top {{
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 32px;
-        }}
-        .hero-badge {{
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            background: var(--pitch);
-            color: var(--strike);
-            padding: 5px 14px;
-            white-space: nowrap;
-        }}
-        .hero-badge::before {{
-            content: '●';
-            font-size: 7px;
-        }}
-        .hero-categories {{
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }}
-        .hero-tag {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--pitch);
-            border: 2px solid var(--pitch);
-            padding: 4px 12px;
-            opacity: 0.6;
-        }}
-        .hero-city {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(72px, 12vw, 160px);
-            font-weight: 800;
-            text-transform: uppercase;
-            line-height: 0.85;
-            letter-spacing: -0.04em;
-            color: var(--pitch);
-        }}
-        .hero-bottom {{
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            border-top: 2px solid rgba(10,10,10,0.2);
-            padding-top: 20px;
-        }}
-        .hero-meta {{
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--pitch);
-            opacity: 0.65;
-            line-height: 1.7;
-        }}
-        .hero-cta {{
-            font-family: 'Syne', sans-serif;
-            font-size: 18px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-            color: var(--pitch);
-            border-bottom: 3px solid var(--pitch);
-            padding-bottom: 2px;
-            white-space: nowrap;
-        }}
-        .hero-cta:hover {{
-            opacity: 0.7;
-        }}
+    /* ── Header ─────────────────────────────────────────────── */
+    .header {{
+      background: var(--pitch);
+    }}
+    .header-stripe {{
+      height: 6px;
+      background: var(--strike);
+    }}
+    .header-inner {{
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 32px 48px 28px;
+      gap: 24px;
+    }}
+    .header-eyebrow {{
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--strike);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }}
+    .header-title {{
+      font-family: 'Syne', sans-serif;
+      font-size: 64px;
+      font-weight: 800;
+      color: var(--parchment);
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: -0.03em;
+    }}
+    .header-week {{
+      font-size: 12px;
+      color: var(--granite);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      padding-bottom: 8px;
+    }}
 
-        /* ── City Rows ───────────────────────────────────────────────── */
-        .cities {{
-            border-bottom: var(--border);
-        }}
-        .city-row {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 48px;
-            background: var(--mist);
-            border-bottom: 2px dashed var(--pitch);
-            cursor: default;
-        }}
-        .city-row:last-child {{
-            border-bottom: none;
-        }}
-        .city-row-inner {{
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }}
-        .city-num {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            color: var(--granite);
-            text-transform: uppercase;
-            min-width: 24px;
-        }}
-        .city-label {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.14em;
-            color: var(--granite);
-            text-transform: uppercase;
-            border: 1px solid var(--granite);
-            padding: 2px 8px;
-        }}
-        .city-name {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(32px, 4vw, 52px);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            line-height: 1;
-        }}
-        .city-arrow {{
-            font-size: 24px;
-            color: var(--granite);
-        }}
+    /* ── Aberdeen Hero ──────────────────────────────────────── */
+    .hero {{
+      background: var(--strike);
+      border-bottom: 3px solid var(--pitch);
+      padding: 40px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }}
+    .hero-top {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }}
+    .hero-badge {{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--pitch);
+      color: var(--strike);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      white-space: nowrap;
+    }}
+    .hero-tags {{
+      display: flex;
+      gap: 8px;
+    }}
+    .hero-tag {{
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--pitch);
+      border: 2px solid rgba(10,10,10,0.4);
+      padding: 4px 12px;
+    }}
+    .hero-city {{
+      font-family: 'Syne', sans-serif;
+      font-size: 128px;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: var(--pitch);
+    }}
+    .hero-bottom {{
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      border-top: 2px solid rgba(10,10,10,0.18);
+      padding-top: 18px;
+    }}
+    .hero-meta {{
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--pitch);
+      opacity: 0.6;
+      line-height: 1.8;
+    }}
+    .hero-cta {{
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+      color: var(--pitch);
+      border-bottom: 3px solid var(--pitch);
+      padding-bottom: 3px;
+      white-space: nowrap;
+    }}
 
-        /* ── Newsletter CTA ──────────────────────────────────────────── */
-        .newsletter {{
-            background: var(--pitch);
-            padding: 48px;
-            border-bottom: var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 48px;
-        }}
-        .newsletter-left {{
-            flex: 1;
-        }}
-        .newsletter-label {{
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--strike);
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }}
-        .newsletter-headline {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(28px, 3.5vw, 48px);
-            font-weight: 800;
-            color: var(--parchment);
-            text-transform: uppercase;
-            line-height: 0.95;
-            letter-spacing: -0.02em;
-        }}
-        .newsletter-right {{
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 14px;
-        }}
-        .newsletter-body {{
-            font-size: 13px;
-            color: var(--granite);
-            line-height: 1.7;
-            max-width: 280px;
-            text-align: right;
-        }}
-        .newsletter-btn {{
-            display: inline-block;
-            background: var(--strike);
-            color: var(--pitch);
-            font-family: 'DM Mono', monospace;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 16px 36px;
-            white-space: nowrap;
-        }}
-        .newsletter-btn:hover {{
-            background: var(--parchment);
-        }}
+    /* ── City Rows ──────────────────────────────────────────── */
+    .cities {{
+      border-bottom: 3px solid var(--pitch);
+    }}
+    .city-row {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      background: var(--mist);
+      border-bottom: 2px dashed var(--pitch);
+    }}
+    .city-row:last-child {{
+      border-bottom: none;
+    }}
+    .city-row-left {{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }}
+    .city-num {{
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      color: var(--granite);
+      text-transform: uppercase;
+    }}
+    .city-pill {{
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--granite);
+      border: 1px solid var(--granite);
+      padding: 2px 10px;
+      white-space: nowrap;
+    }}
+    .city-name {{
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--pitch);
+    }}
+    .city-arrow {{
+      font-size: 24px;
+      color: var(--granite);
+    }}
 
-        /* ── Footer ──────────────────────────────────────────────────── */
-        .footer {{
-            padding: 20px 48px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--parchment);
-        }}
-        .footer-updated {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--granite);
-        }}
-        .footer-link {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--pitch);
-            border-bottom: 1px solid var(--pitch);
-        }}
-    </style>
+    /* ── Newsletter ─────────────────────────────────────────── */
+    .newsletter {{
+      background: var(--pitch);
+      padding: 48px;
+      border-bottom: 3px solid var(--strike);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+    }}
+    .newsletter-left {{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .newsletter-eyebrow {{
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--strike);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }}
+    .newsletter-headline {{
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--parchment);
+      text-transform: uppercase;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+    }}
+    .newsletter-right {{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 16px;
+      flex-shrink: 0;
+      max-width: 320px;
+    }}
+    .newsletter-body {{
+      font-size: 13px;
+      color: var(--granite);
+      line-height: 1.7;
+      text-align: right;
+    }}
+    .newsletter-btn {{
+      display: inline-block;
+      background: var(--strike);
+      color: var(--pitch);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 36px;
+      white-space: nowrap;
+    }}
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    .footer {{
+      padding: 18px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--parchment);
+    }}
+    .footer-label {{
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--granite);
+    }}
+    .footer-link {{
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--pitch);
+      border-bottom: 1px solid var(--pitch);
+      display: inline;
+    }}
+  </style>
 </head>
 <body>
 <div class="page">
 
-    <!-- ── Header ─────────────────────────────────────────────── -->
-    <header class="header">
-        <div class="header-accent"></div>
-        <div class="header-inner">
-            <div class="header-left">
-                <div class="header-eyebrow">Insider</div>
-                <div class="header-title">Your City.<br>This Week.</div>
-            </div>
-            <div class="header-week">{week_label}</div>
-        </div>
-    </header>
-
-    <!-- ── Aberdeen Hero ──────────────────────────────────────── -->
-    <a href="{linkinbio_url}" class="aberdeen-hero">
-        <div class="hero-top">
-            <div class="hero-badge">Live This Week</div>
-            <div class="hero-categories">
-                <span class="hero-tag">Nights Out</span>
-                <span class="hero-tag">Food</span>
-                <span class="hero-tag">Events</span>
-                <span class="hero-tag">New In</span>
-            </div>
-        </div>
-        <div class="hero-city">Aberdeen</div>
-        <div class="hero-bottom">
-            <div class="hero-meta">
-                {event_count} events this weekend<br>
-                Updated Fri {date_display} · Scotland
-            </div>
-            <div class="hero-cta">View All Events →</div>
-        </div>
-    </a>
-
-    <!-- ── Coming-Soon Cities ─────────────────────────────────── -->
-    <div class="cities">
-        {coming_soon_html}
+  <!-- Header -->
+  <header class="header">
+    <div class="header-stripe"></div>
+    <div class="header-inner">
+      <div>
+        <div class="header-eyebrow">Insider</div>
+        <div class="header-title">Your City.<br>This Week.</div>
+      </div>
+      <div class="header-week">{week_label}</div>
     </div>
+  </header>
 
-    <!-- ── Newsletter ─────────────────────────────────────────── -->
-    <div class="newsletter">
-        <div class="newsletter-left">
-            <div class="newsletter-label">Never Miss a Drop</div>
-            <div class="newsletter-headline">Get it in<br>your inbox.</div>
-        </div>
-        <div class="newsletter-right">
-            <div class="newsletter-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</div>
-            <a href="#" class="newsletter-btn">Subscribe Free →</a>
-        </div>
+  <!-- Aberdeen Hero -->
+  <a href="{linkinbio_url}" class="hero">
+    <div class="hero-top">
+      <div class="hero-badge">● Live This Week</div>
+      <div class="hero-tags">
+        <span class="hero-tag">Nights Out</span>
+        <span class="hero-tag">Food</span>
+        <span class="hero-tag">Events</span>
+        <span class="hero-tag">New In</span>
+      </div>
     </div>
+    <div class="hero-city">Aberdeen</div>
+    <div class="hero-bottom">
+      <div class="hero-meta">
+        {event_count} events this weekend<br>
+        Updated Fri {date_display} · Scotland
+      </div>
+      <div class="hero-cta">View All Events →</div>
+    </div>
+  </a>
 
-    <!-- ── Footer ─────────────────────────────────────────────── -->
-    <footer class="footer">
-        <span class="footer-updated">Updated every Friday</span>
-        <a href="mailto:hello@abdn.insider" class="footer-link">Want your city? Get in touch →</a>
-    </footer>
+  <!-- Coming-Soon Cities -->
+  <div class="cities">
+    {cities_html}
+  </div>
+
+  <!-- Newsletter -->
+  <div class="newsletter">
+    <div class="newsletter-left">
+      <div class="newsletter-eyebrow">Never Miss a Drop</div>
+      <div class="newsletter-headline">Get It In<br>Your Inbox.</div>
+    </div>
+    <div class="newsletter-right">
+      <div class="newsletter-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</div>
+      <a href="#" class="newsletter-btn">Subscribe Free →</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-label">Updated Every Friday</span>
+    <a href="mailto:hello@abdn.insider" class="footer-link">Want Your City? Get In Touch →</a>
+  </footer>
 
 </div>
 </body>
