@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aberdeen Insider — Visual Style Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black:   #0A0A0A;
+      --white:   #F5F0E8;
+      --yellow:  #FFE500;
+      --teal:    #00C4CC;
+      --granite: #8C8C8C;
+      --red:     #FF3B30;
+      --border:  4px solid #0A0A0A;
+      --font-display: 'Syne', sans-serif;
+      --font-mono:    'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── LAYOUT ── */
+    .page { max-width: 1100px; margin: 0 auto; padding: 60px 32px 120px; }
+
+    section { margin-bottom: 80px; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--granite);
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--granite);
+      padding-bottom: 8px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      border: var(--border);
+      background: var(--black);
+      color: var(--yellow);
+      padding: 48px 40px;
+      margin-bottom: 80px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-wordmark {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -2px;
+    }
+
+    .header-wordmark span {
+      display: block;
+      color: var(--white);
+      font-size: 0.4em;
+      letter-spacing: 0.15em;
+      font-weight: 400;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      margin-top: 12px;
+    }
+
+    .header-meta {
+      text-align: right;
+      color: var(--granite);
+      font-size: 12px;
+    }
+
+    /* ── COLOUR PALETTE ── */
+    .palette {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0;
+      border: var(--border);
+    }
+
+    .swatch {
+      padding: 24px 20px 20px;
+      border-right: var(--border);
+      border-bottom: var(--border);
+    }
+    .swatch:last-child { border-right: none; }
+
+    .swatch-block {
+      width: 100%;
+      height: 72px;
+      border: 2px solid rgba(0,0,0,0.15);
+      margin-bottom: 12px;
+    }
+
+    .swatch-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      display: block;
+    }
+
+    .swatch-hex {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--granite);
+    }
+
+    .swatch-use {
+      font-size: 11px;
+      color: var(--granite);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .type-row {
+      border: var(--border);
+      border-bottom: none;
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 20px;
+      align-items: center;
+    }
+    .type-row:last-child { border-bottom: var(--border); }
+
+    .type-meta {
+      font-size: 11px;
+      color: var(--granite);
+      font-family: var(--font-mono);
+    }
+    .type-meta strong {
+      display: block;
+      color: var(--black);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .t-hero {
+      font-family: var(--font-display);
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -2px;
+    }
+
+    .t-headline {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .t-subhead {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .t-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .t-body {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .t-vibe {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--granite);
+    }
+
+    /* ── CAROUSEL SLIDES PREVIEW ── */
+    .slides-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0;
+      border: var(--border);
+    }
+
+    .slide {
+      aspect-ratio: 1;
+      padding: 28px;
+      border-right: var(--border);
+      border-bottom: var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Slide 1 — Cover */
+    .slide-1 {
+      background: var(--black);
+      color: var(--white);
+    }
+    .slide-1 .slide-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--yellow);
+    }
+    .slide-1 .slide-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -1px;
+    }
+    .slide-1 .slide-title em {
+      color: var(--yellow);
+      font-style: normal;
+    }
+    .slide-1 .slide-date {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--granite);
+    }
+    .slide-1 .slide-handle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--white);
+      letter-spacing: 0.1em;
+    }
+
+    /* Slide 2 — Event */
+    .slide-2 {
+      background: var(--white);
+      color: var(--black);
+    }
+    .slide-2 .slide-num {
+      font-family: var(--font-display);
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--yellow);
+      -webkit-text-stroke: 3px var(--black);
+      position: absolute;
+      top: 16px;
+      right: 20px;
+    }
+    .slide-2 .slide-category {
+      display: inline-block;
+      background: var(--black);
+      color: var(--yellow);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+    }
+    .slide-2 .slide-event-name {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      line-height: 1;
+      margin-top: 8px;
+    }
+    .slide-2 .slide-venue {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--granite);
+      margin-top: 6px;
+    }
+    .slide-2 .slide-vibe {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-style: italic;
+      border-left: 3px solid var(--yellow);
+      padding-left: 10px;
+      margin-top: 10px;
+      color: var(--black);
+    }
+    .slide-2 .slide-meta {
+      display: flex;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+    .slide-2 .meta-pill {
+      border: 2px solid var(--black);
+      padding: 3px 10px;
+      font-size: 10px;
+    }
+
+    /* Slide 3 — New Opening */
+    .slide-3 {
+      background: var(--teal);
+      color: var(--black);
+    }
+    .slide-3 .opening-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: var(--black);
+      color: var(--teal);
+      padding: 4px 10px;
+      display: inline-block;
+    }
+    .slide-3 .opening-name {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -1px;
+    }
+    .slide-3 .opening-desc {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .slide-3 .opening-status {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* Slide 4 — CTA */
+    .slide-4 {
+      background: var(--yellow);
+      color: var(--black);
+    }
+    .slide-4 .cta-big {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 0.9;
+      letter-spacing: -2px;
+    }
+    .slide-4 .cta-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .slide-4 .cta-handle {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 800;
+      border: var(--border);
+      padding: 8px 16px;
+      display: inline-block;
+    }
+
+    /* ── UI COMPONENTS ── */
+    .components-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0;
+      border: var(--border);
+    }
+
+    .comp {
+      padding: 24px;
+      border-right: var(--border);
+      border-bottom: var(--border);
+    }
+    .comp-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--granite);
+      margin-bottom: 14px;
+    }
+
+    /* Tags */
+    .tag { display: inline-block; border: 2px solid var(--black); padding: 4px 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin: 3px 3px 3px 0; }
+    .tag-filled { background: var(--black); color: var(--white); }
+    .tag-yellow { background: var(--yellow); }
+    .tag-teal { background: var(--teal); }
+
+    /* Buttons */
+    .btn { display: inline-block; border: var(--border); padding: 12px 24px; font-family: var(--font-display); font-weight: 800; font-size: 14px; letter-spacing: 0.05em; cursor: pointer; text-transform: uppercase; margin-bottom: 8px; }
+    .btn-primary { background: var(--black); color: var(--yellow); }
+    .btn-secondary { background: var(--yellow); color: var(--black); }
+    .btn-ghost { background: transparent; color: var(--black); }
+
+    /* Event card */
+    .event-card {
+      border: var(--border);
+      padding: 16px;
+      background: var(--white);
+    }
+    .event-card-cat { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--granite); }
+    .event-card-name { font-family: var(--font-display); font-weight: 800; font-size: 18px; line-height: 1; margin: 4px 0; }
+    .event-card-meta { font-family: var(--font-mono); font-size: 11px; color: var(--granite); }
+
+    /* ── DO / DON'T ── */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: var(--border);
+    }
+
+    .rule-col { padding: 28px; }
+    .rule-col + .rule-col { border-left: var(--border); }
+
+    .rule-header {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--black);
+    }
+
+    .rule-header.do { color: var(--black); }
+    .rule-header.dont { color: var(--granite); }
+
+    .rule-item {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(0,0,0,0.15);
+      display: flex;
+      gap: 10px;
+    }
+    .rule-item:last-child { border-bottom: none; }
+
+    .rule-icon { flex-shrink: 0; }
+
+    /* ── CAPTION EXAMPLE ── */
+    .caption-box {
+      border: var(--border);
+      padding: 28px;
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
+
+    .caption-box .hashtags { color: var(--teal); }
+
+    /* ── FOOTER ── */
+    .style-footer {
+      border: var(--border);
+      background: var(--black);
+      color: var(--granite);
+      padding: 24px 28px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .style-footer strong { color: var(--yellow); }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-wordmark">
+      ABERDEEN<br>INSIDER
+      <span>@abdn.insider — Visual Style Guide v1.0</span>
+    </div>
+    <div class="header-meta">
+      Target: 22–40 Aberdeen professionals<br>
+      Platform: Instagram + Newsletter<br>
+      Aesthetic: Neobrutalist Editorial
+    </div>
+  </div>
+
+  <!-- Colour Palette -->
+  <section>
+    <div class="section-label">01 — Colour Palette</div>
+    <div class="palette">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#0A0A0A;"></div>
+        <span class="swatch-name">Pitch</span>
+        <span class="swatch-hex">#0A0A0A</span>
+        <span class="swatch-use">Primary bg, text, borders</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#F5F0E8; border: 2px solid #0A0A0A;"></div>
+        <span class="swatch-name">Parchment</span>
+        <span class="swatch-hex">#F5F0E8</span>
+        <span class="swatch-use">Light slides, page bg</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#FFE500;"></div>
+        <span class="swatch-name">Strike</span>
+        <span class="swatch-hex">#FFE500</span>
+        <span class="swatch-use">Primary accent, CTA</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#00C4CC;"></div>
+        <span class="swatch-name">North Sea</span>
+        <span class="swatch-hex">#00C4CC</span>
+        <span class="swatch-use">New openings, highlights</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#8C8C8C;"></div>
+        <span class="swatch-name">Granite</span>
+        <span class="swatch-hex">#8C8C8C</span>
+        <span class="swatch-use">Secondary text, labels</span>
+      </div>
+      <div class="swatch" style="border-right:none;">
+        <div class="swatch-block" style="background:#FF3B30;"></div>
+        <span class="swatch-name">Alert</span>
+        <span class="swatch-hex">#FF3B30</span>
+        <span class="swatch-use">Sold out, urgent tags</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Typography -->
+  <section>
+    <div class="section-label">02 — Typography</div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Hero / Cover</strong>Syne 800 / -2px tracking / 0.9 lh</div>
+      <div class="t-hero">THIS WEEKEND</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Headline</strong>Syne 800 / -1px tracking / 1.0 lh</div>
+      <div class="t-headline">New Openings 🔥</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Subheading</strong>Syne 700 / normal tracking / 1.2 lh</div>
+      <div class="t-subhead">The Lemon Tree — Live Tonight</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Label / Tag</strong>DM Mono 500 / 0.18em tracking / UPPERCASE</div>
+      <div class="t-label">Live Music · Fri 14 Mar · £12</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Body</strong>DM Mono 400 / 1.6 lh</div>
+      <div class="t-body">Aberdeen's go-to weekly guide for what's on, what's opening and what you actually need to know.</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta"><strong>Vibe Note</strong>DM Mono 400 italic / granite colour</div>
+      <div class="t-vibe">"think sticky floors, great sets, 2am kebab guaranteed"</div>
+    </div>
+  </section>
+
+  <!-- Carousel Slides -->
+  <section>
+    <div class="section-label">03 — Carousel Slide Templates (1080×1080px)</div>
+    <div class="slides-grid">
+
+      <!-- Cover -->
+      <div class="slide slide-1">
+        <div>
+          <div class="slide-tag">Aberdeen Insider · 14–16 Mar</div>
+        </div>
+        <div>
+          <div class="slide-title">THIS<br><em>WEEK</em><br>END</div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div class="slide-date">5 things you need to do →</div>
+          <div class="slide-handle">@abdn.insider</div>
+        </div>
+      </div>
+
+      <!-- Event slide -->
+      <div class="slide slide-2">
+        <div class="slide-num">01</div>
+        <div>
+          <div class="slide-category">Live Music</div>
+          <div class="slide-event-name">COLONNADE<br>LIVE</div>
+          <div class="slide-venue">📍 Lemon Tree, Aberdeen</div>
+          <div class="slide-vibe">"indie anthems, proper venue, sell-out crowd energy"</div>
+        </div>
+        <div class="slide-meta">
+          <span class="meta-pill">Fri 14 Mar</span>
+          <span class="meta-pill">7:30pm</span>
+          <span class="meta-pill">£14</span>
+        </div>
+      </div>
+
+      <!-- New Opening -->
+      <div class="slide slide-3">
+        <div>
+          <div class="opening-tag">New Opening ✦</div>
+        </div>
+        <div>
+          <div class="opening-name">KOKU<br>RAMEN</div>
+          <div class="opening-desc" style="margin-top:10px;">Aberdeen's first proper ramen spot just landed on Union Street. Tonkotsu, miso, seasonal specials.</div>
+        </div>
+        <div class="opening-status">Open Now · Union Street</div>
+      </div>
+
+      <!-- CTA -->
+      <div class="slide slide-4">
+        <div>
+          <div class="cta-big">DON'T<br>MISS<br>OUT.</div>
+        </div>
+        <div>
+          <div class="cta-sub" style="margin-bottom:12px;">Weekly drops every Friday. Free. Aberdeen only.</div>
+          <div class="cta-handle">@abdn.insider</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Components -->
+  <section>
+    <div class="section-label">04 — UI Components</div>
+    <div class="components-grid">
+
+      <div class="comp">
+        <div class="comp-label">Category Tags</div>
+        <div class="tag tag-filled">Nightlife</div>
+        <div class="tag tag-yellow">Live Music</div>
+        <div class="tag tag-teal">New Opening</div>
+        <div class="tag">Comedy</div>
+        <div class="tag">Food & Drink</div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Buttons</div>
+        <div><div class="btn btn-primary">Get Tickets →</div></div>
+        <div><div class="btn btn-secondary">This Weekend</div></div>
+        <div><div class="btn btn-ghost">See All Events</div></div>
+      </div>
+
+      <div class="comp" style="grid-column: span 1;">
+        <div class="comp-label">Event Card</div>
+        <div class="event-card">
+          <div class="event-card-cat">Live Music · Fri 14 Mar</div>
+          <div class="event-card-name">Colonnade Live</div>
+          <div class="event-card-meta">Lemon Tree · 7:30pm · £14 · <span style="color:#FF3B30">Limited</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Do / Don't -->
+  <section>
+    <div class="section-label">05 — Design Rules</div>
+    <div class="rules-grid">
+      <div class="rule-col">
+        <div class="rule-header do">✦ Always Do</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Hard borders only — 3–4px solid black</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Syne for all display/headline text</div>
+        <div class="rule-item"><span class="rule-icon">→</span> DM Mono for all body, labels, metadata</div>
+        <div class="rule-item"><span class="rule-icon">→</span> High contrast — black on parchment or yellow on black</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Oversized numbers on list slides</div>
+        <div class="rule-item"><span class="rule-icon">→</span> ALL CAPS for slide titles and CTA text</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Vibe notes in italic mono, border-left accent</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Tight leading on headlines (0.9–1.0)</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Use North Sea teal for new openings only</div>
+        <div class="rule-item"><span class="rule-icon">→</span> Keep layouts asymmetric and bold</div>
+      </div>
+      <div class="rule-col">
+        <div class="rule-header dont">✕ Never Do</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Rounded corners anywhere</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Drop shadows or glows</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Gradients of any kind</div>
+        <div class="rule-item"><span class="rule-icon">×</span> More than 3 colours on one slide</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Light/thin font weights</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Centred layouts on event slides</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Emoji overload — max 1 per slide</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Generic sans-serif fonts (Inter, Roboto, Arial)</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Soft, pastel or muted colour schemes</div>
+        <div class="rule-item"><span class="rule-icon">×</span> Corporate or formal language</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Caption Example -->
+  <section>
+    <div class="section-label">06 — Caption Template</div>
+    <div class="caption-box">your weekend sorted 🔥
+
+this week: live music at the lemon tree, aberdeen's
+best new ramen spot just opened, and there's a
+comedy night you actually want to go to.
+
+→ tap the link in bio for tickets
+
+<span class="hashtags">#aberdeen #aberdeenscotland #aberdeenevents
+#thingstodoaberdeen #aberdeenlife #weekendinaberdeen
+#abdn #aberdeenfood #aberdeennightlife #visitaberdeen</span></div>
+  </section>
+
+  <!-- Footer -->
+  <div class="style-footer">
+    <span><strong>Aberdeen Insider</strong> — Style Guide v1.0 — March 2026</span>
+    <span>@abdn.insider · aberdeen-insider/ project root</span>
+  </div>
+
+</div>
+</body>
+</html>
