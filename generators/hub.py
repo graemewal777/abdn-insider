@@ -110,7 +110,7 @@ def generate_hub(data: dict) -> str:
             font-family: 'DM Mono', monospace;
             background: var(--parchment);
             color: var(--pitch);
-            max-width: 480px;
+            max-width: 680px;
             margin: 0 auto;
             min-height: 100vh;
         }}
@@ -193,15 +193,12 @@ def generate_hub(data: dict) -> str:
         }}
         .aberdeen-city {{
             font-family: 'Syne', sans-serif;
-            font-size: clamp(28px, 9vw, 46px);
+            font-size: clamp(36px, 7vw, 64px);
             font-weight: 800;
             text-transform: uppercase;
             line-height: 0.88;
             letter-spacing: -0.03em;
             color: var(--pitch);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: clip;
         }}
         .aberdeen-meta {{
             font-size: 11px;
@@ -278,7 +275,7 @@ def generate_hub(data: dict) -> str:
         }}
         .city-row-name {{
             font-family: 'Syne', sans-serif;
-            font-size: 28px;
+            font-size: clamp(28px, 5vw, 40px);
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: -0.02em;
