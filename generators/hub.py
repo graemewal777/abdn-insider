@@ -3,11 +3,6 @@ Aberdeen Insider — Hub Page Generator
 Generates docs/index.html — a permanent landing page that never changes URL.
 This is the link you put in your Instagram bio, forever.
 
-The page shows:
-  - Aberdeen (live this week) → links to latest linkinbio-YYYY-MM-DD.html
-  - Coming-soon cities (Glasgow, Edinburgh, Dundee) as teaser rows
-  - Newsletter CTA
-
 Output: docs/index.html  (served by GitHub Pages at the permanent URL)
 """
 
@@ -16,15 +11,12 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Import GA_TRACKING_ID from config if available
 try:
     sys.path.insert(0, str(Path(__file__).parent.parent))
     from config import GA_TRACKING_ID
 except ImportError:
     GA_TRACKING_ID = ""
 
-
-# ── Coming-soon cities ────────────────────────────────────────────────────────
 COMING_SOON_CITIES = [
     {"number": "02", "name": "Glasgow"},
     {"number": "03", "name": "Edinburgh"},
@@ -33,11 +25,9 @@ COMING_SOON_CITIES = [
 
 
 def _ga4_snippet(tracking_id: str) -> str:
-    """Return the GA4 script tags if a tracking ID is configured."""
     if not tracking_id:
         return ""
     return f"""
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={tracking_id}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -49,34 +39,30 @@ def _ga4_snippet(tracking_id: str) -> str:
 
 def _coming_soon_row(city: dict) -> str:
     return f"""
-    <a class="city-row" href="#">
-        <div class="city-row-left">
-            <span class="city-row-num">{city["number"]} · COMING SOON</span>
-            <span class="city-row-name">{city["name"].upper()}</span>
-        </div>
-        <span class="city-row-arrow">→</span>
-    </a>"""
+        <div class="city-row">
+            <div class="city-row-inner">
+                <span class="city-num">{city["number"]}</span>
+                <span class="city-label">Coming Soon</span>
+                <span class="city-name">{city["name"].upper()}</span>
+            </div>
+            <span class="city-arrow">→</span>
+        </div>"""
 
 
 def generate_hub(data: dict) -> str:
-    """Generate docs/index.html and return the output path."""
-
     week_of     = data.get("week_of", datetime.now().strftime("%Y-%m-%d"))
     events      = data.get("events", [])
     event_count = len(events)
 
-    # Human-readable date strings
     try:
         dt           = datetime.strptime(week_of, "%Y-%m-%d")
-        date_display = dt.strftime("%-d %b %Y").upper()          # e.g. "12 MAR 2026"
+        date_display = dt.strftime("%-d %b %Y").upper()
         week_label   = f"WK {dt.isocalendar()[1]} · {dt.strftime('%b %Y').upper()}"
     except ValueError:
         date_display = week_of.upper()
         week_label   = week_of.upper()
 
-    # Path to this week's link-in-bio page (relative URL on GitHub Pages)
-    linkinbio_url = f"linkinbio-{week_of}.html"
-
+    linkinbio_url    = f"linkinbio-{week_of}.html"
     coming_soon_html = "".join(_coming_soon_row(c) for c in COMING_SOON_CITIES)
     ga4_html         = _ga4_snippet(GA_TRACKING_ID)
 
@@ -97,262 +83,293 @@ def generate_hub(data: dict) -> str:
             --pitch:     #0A0A0A;
             --parchment: #F5F0E8;
             --strike:    #FFE500;
-            --northsea:  #00C4CC;
             --granite:   #8C8C8C;
             --mist:      #EDE9E1;
+            --border:    3px solid #0A0A0A;
         }}
 
-        html {{
-            background: #1a1a1a;
-        }}
-
-        body {{
-            font-family: 'DM Mono', monospace;
-            background: var(--parchment);
+        html, body {{
+            background: var(--pitch);
             color: var(--pitch);
-            max-width: 680px;
+            font-family: 'DM Mono', monospace;
+        }}
+
+        .page {{
+            background: var(--parchment);
+            max-width: 1200px;
             margin: 0 auto;
             min-height: 100vh;
+            border-left: var(--border);
+            border-right: var(--border);
         }}
 
         a {{ text-decoration: none; color: inherit; }}
 
-        /* ── Header ────────────────────────────────────────── */
+        /* ── Header ─────────────────────────────────────────────────── */
         .header {{
             background: var(--pitch);
-            padding: 0 0 0 0;
+            border-bottom: var(--border);
         }}
         .header-accent {{
             background: var(--strike);
-            height: 5px;
+            height: 6px;
         }}
         .header-inner {{
-            padding: 24px 28px 22px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 32px 48px 28px;
+            gap: 24px;
+        }}
+        .header-left {{
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }}
         .header-eyebrow {{
             font-size: 11px;
             font-weight: 500;
             color: var(--strike);
-            letter-spacing: 0.16em;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            margin-bottom: 6px;
         }}
         .header-title {{
             font-family: 'Syne', sans-serif;
-            font-size: 36px;
+            font-size: clamp(40px, 5vw, 72px);
+            font-weight: 800;
+            color: var(--parchment);
+            text-transform: uppercase;
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+        }}
+        .header-week {{
+            font-size: 12px;
+            color: var(--granite);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            align-self: flex-end;
+            white-space: nowrap;
+            padding-bottom: 6px;
+        }}
+
+        /* ── Aberdeen Hero ───────────────────────────────────────────── */
+        .aberdeen-hero {{
+            background: var(--strike);
+            border-bottom: var(--border);
+            padding: 40px 48px 44px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }}
+        .hero-top {{
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 32px;
+        }}
+        .hero-badge {{
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            background: var(--pitch);
+            color: var(--strike);
+            padding: 5px 14px;
+            white-space: nowrap;
+        }}
+        .hero-badge::before {{
+            content: '●';
+            font-size: 7px;
+        }}
+        .hero-categories {{
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }}
+        .hero-tag {{
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            border: 2px solid var(--pitch);
+            padding: 4px 12px;
+            opacity: 0.6;
+        }}
+        .hero-city {{
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(72px, 12vw, 160px);
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            color: var(--pitch);
+        }}
+        .hero-bottom {{
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            border-top: 2px solid rgba(10,10,10,0.2);
+            padding-top: 20px;
+        }}
+        .hero-meta {{
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            opacity: 0.65;
+            line-height: 1.7;
+        }}
+        .hero-cta {{
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: var(--pitch);
+            border-bottom: 3px solid var(--pitch);
+            padding-bottom: 2px;
+            white-space: nowrap;
+        }}
+        .hero-cta:hover {{
+            opacity: 0.7;
+        }}
+
+        /* ── City Rows ───────────────────────────────────────────────── */
+        .cities {{
+            border-bottom: var(--border);
+        }}
+        .city-row {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 48px;
+            background: var(--mist);
+            border-bottom: 2px dashed var(--pitch);
+            cursor: default;
+        }}
+        .city-row:last-child {{
+            border-bottom: none;
+        }}
+        .city-row-inner {{
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }}
+        .city-num {{
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            color: var(--granite);
+            text-transform: uppercase;
+            min-width: 24px;
+        }}
+        .city-label {{
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            color: var(--granite);
+            text-transform: uppercase;
+            border: 1px solid var(--granite);
+            padding: 2px 8px;
+        }}
+        .city-name {{
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }}
+        .city-arrow {{
+            font-size: 24px;
+            color: var(--granite);
+        }}
+
+        /* ── Newsletter CTA ──────────────────────────────────────────── */
+        .newsletter {{
+            background: var(--pitch);
+            padding: 48px;
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 48px;
+        }}
+        .newsletter-left {{
+            flex: 1;
+        }}
+        .newsletter-label {{
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--strike);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }}
+        .newsletter-headline {{
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(28px, 3.5vw, 48px);
             font-weight: 800;
             color: var(--parchment);
             text-transform: uppercase;
             line-height: 0.95;
             letter-spacing: -0.02em;
         }}
-        .header-week {{
-            font-size: 11px;
-            color: var(--granite);
-            letter-spacing: 0.1em;
-            margin-top: 10px;
-        }}
-
-        /* ── Aberdeen Hero Card ────────────────────────────── */
-        .aberdeen-card {{
-            background: var(--strike);
-            border: 4px solid var(--pitch);
-            margin: 20px 20px 0;
-            padding: 22px 24px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            gap: 16px;
-            overflow: hidden;
-        }}
-        .aberdeen-left {{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-width: 0;
-            overflow: hidden;
-        }}
-        .aberdeen-badge {{
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--pitch);
-            background: var(--pitch);
-            color: var(--strike);
-            padding: 4px 10px;
-            align-self: flex-start;
-            margin-bottom: 10px;
-        }}
-        .aberdeen-badge::before {{
-            content: '●';
-            font-size: 8px;
-        }}
-        .aberdeen-city {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(36px, 7vw, 64px);
-            font-weight: 800;
-            text-transform: uppercase;
-            line-height: 0.88;
-            letter-spacing: -0.03em;
-            color: var(--pitch);
-        }}
-        .aberdeen-meta {{
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            color: var(--pitch);
-            margin-top: 12px;
-            line-height: 1.7;
-            opacity: 0.7;
-            white-space: nowrap;
-        }}
-        .aberdeen-right {{
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
+        .newsletter-right {{
             flex-shrink: 0;
-            min-width: 80px;
-        }}
-        .aberdeen-categories {{
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 3px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--pitch);
-            opacity: 0.65;
-            margin-bottom: 16px;
+            gap: 14px;
         }}
-        .aberdeen-cta {{
-            font-family: 'Syne', sans-serif;
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--pitch);
-            border-bottom: 2px solid var(--pitch);
-            padding-bottom: 2px;
-            white-space: nowrap;
-        }}
-
-        /* ── Coming-Soon City Rows ─────────────────────────── */
-        .cities-stack {{
-            margin: 0 20px;
-            border-left: 4px solid var(--pitch);
-            border-right: 4px solid var(--pitch);
-        }}
-        .city-row {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--mist);
-            border-bottom: 2px dashed var(--pitch);
-            padding: 16px 20px;
-            cursor: default;
-        }}
-        .city-row:last-child {{
-            border-bottom: none;
-        }}
-        .city-row-left {{
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }}
-        .city-row-num {{
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            color: var(--granite);
-            text-transform: uppercase;
-        }}
-        .city-row-name {{
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(28px, 5vw, 40px);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-            line-height: 1;
-            white-space: nowrap;
-        }}
-        .city-row-arrow {{
-            font-size: 22px;
-            color: var(--granite);
-        }}
-
-        /* ── Newsletter CTA ────────────────────────────────── */
-        .newsletter-cta {{
-            background: var(--pitch);
-            margin: 20px 20px 0;
-            padding: 24px;
-            border: 3px solid var(--strike);
-        }}
-        .cta-label {{
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--strike);
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }}
-        .cta-headline {{
-            font-family: 'Syne', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--parchment);
-            text-transform: uppercase;
-            line-height: 1.1;
-            margin-bottom: 8px;
-        }}
-        .cta-body {{
+        .newsletter-body {{
             font-size: 13px;
             color: var(--granite);
             line-height: 1.7;
-            margin-bottom: 18px;
+            max-width: 280px;
+            text-align: right;
         }}
-        .cta-btn {{
-            display: block;
-            text-align: center;
+        .newsletter-btn {{
+            display: inline-block;
             background: var(--strike);
             color: var(--pitch);
             font-family: 'DM Mono', monospace;
             font-size: 14px;
             font-weight: 500;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            text-decoration: none;
-            padding: 14px 20px;
+            padding: 16px 36px;
+            white-space: nowrap;
+        }}
+        .newsletter-btn:hover {{
+            background: var(--parchment);
         }}
 
-        /* ── Footer ────────────────────────────────────────── */
+        /* ── Footer ──────────────────────────────────────────────────── */
         .footer {{
-            border-top: 3px solid var(--pitch);
-            margin: 20px 20px 0;
-            padding: 16px 0 24px;
+            padding: 20px 48px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
+            background: var(--parchment);
         }}
         .footer-updated {{
             font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--granite);
         }}
-        .footer-cta {{
+        .footer-link {{
             font-size: 11px;
             font-weight: 500;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--pitch);
             border-bottom: 1px solid var(--pitch);
@@ -360,63 +377,68 @@ def generate_hub(data: dict) -> str:
     </style>
 </head>
 <body>
+<div class="page">
 
-    <!-- ── Header ──────────────────────────────────────────── -->
+    <!-- ── Header ─────────────────────────────────────────────── -->
     <header class="header">
         <div class="header-accent"></div>
         <div class="header-inner">
-            <div class="header-eyebrow">Insider</div>
-            <div class="header-title">Your City.<br>This Week.</div>
+            <div class="header-left">
+                <div class="header-eyebrow">Insider</div>
+                <div class="header-title">Your City.<br>This Week.</div>
+            </div>
             <div class="header-week">{week_label}</div>
         </div>
     </header>
 
-    <!-- ── Aberdeen Hero ────────────────────────────────────── -->
-    <a href="{linkinbio_url}" class="aberdeen-card">
-        <div class="aberdeen-left">
-            <div>
-                <div class="aberdeen-badge">Live This Week</div>
-                <div class="aberdeen-city">Aberdeen</div>
-            </div>
-            <div class="aberdeen-meta">
-                {event_count} EVENTS · SCOTLAND<br>
-                FRI {date_display}
+    <!-- ── Aberdeen Hero ──────────────────────────────────────── -->
+    <a href="{linkinbio_url}" class="aberdeen-hero">
+        <div class="hero-top">
+            <div class="hero-badge">Live This Week</div>
+            <div class="hero-categories">
+                <span class="hero-tag">Nights Out</span>
+                <span class="hero-tag">Food</span>
+                <span class="hero-tag">Events</span>
+                <span class="hero-tag">New In</span>
             </div>
         </div>
-        <div class="aberdeen-right">
-            <div class="aberdeen-categories">
-                <span>Nights Out</span>
-                <span>Food</span>
-                <span>Events</span>
-                <span>New In</span>
+        <div class="hero-city">Aberdeen</div>
+        <div class="hero-bottom">
+            <div class="hero-meta">
+                {event_count} events this weekend<br>
+                Updated Fri {date_display} · Scotland
             </div>
-            <div class="aberdeen-cta">View All →</div>
+            <div class="hero-cta">View All Events →</div>
         </div>
     </a>
 
-    <!-- ── Coming-Soon Cities ───────────────────────────────── -->
-    <div class="cities-stack">
+    <!-- ── Coming-Soon Cities ─────────────────────────────────── -->
+    <div class="cities">
         {coming_soon_html}
     </div>
 
-    <!-- ── Newsletter CTA ───────────────────────────────────── -->
-    <div class="newsletter-cta">
-        <div class="cta-label">Never Miss a Drop</div>
-        <div class="cta-headline">Get it in<br>your inbox.</div>
-        <p class="cta-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</p>
-        <a href="#" class="cta-btn">Subscribe Free →</a>
+    <!-- ── Newsletter ─────────────────────────────────────────── -->
+    <div class="newsletter">
+        <div class="newsletter-left">
+            <div class="newsletter-label">Never Miss a Drop</div>
+            <div class="newsletter-headline">Get it in<br>your inbox.</div>
+        </div>
+        <div class="newsletter-right">
+            <div class="newsletter-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</div>
+            <a href="#" class="newsletter-btn">Subscribe Free →</a>
+        </div>
     </div>
 
-    <!-- ── Footer ──────────────────────────────────────────── -->
+    <!-- ── Footer ─────────────────────────────────────────────── -->
     <footer class="footer">
         <span class="footer-updated">Updated every Friday</span>
-        <a href="mailto:hello@abdn.insider" class="footer-cta">Want your city? Get in touch →</a>
+        <a href="mailto:hello@abdn.insider" class="footer-link">Want your city? Get in touch →</a>
     </footer>
 
+</div>
 </body>
 </html>"""
 
-    # Save to docs/ — this is what GitHub Pages serves
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
     output_path = docs_dir / "index.html"
@@ -429,16 +451,14 @@ def generate_hub(data: dict) -> str:
 
 
 if __name__ == "__main__":
-    # Allow running standalone with real data or dummy data
     data_path = Path("data/combined_weekly.json")
     if data_path.exists():
         with open(data_path) as f:
             data = json.load(f)
     else:
-        # Dummy data for testing
         data = {
             "week_of": datetime.now().strftime("%Y-%m-%d"),
-            "events": [{}] * 9,   # 9 placeholder events
+            "events": [{}] * 12,
             "openings": [],
             "news": [],
         }
