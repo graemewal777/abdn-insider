@@ -87,10 +87,12 @@ def run_generators(data=None):
     from generators.carousel import generate_carousel
     from generators.caption import generate_caption
     from generators.linkinbio import generate_linkinbio
+    from generators.hub import generate_hub
 
     carousel_dir = generate_carousel(data)
     caption      = generate_caption(data)
     linkinbio    = generate_linkinbio(data)
+    hub          = generate_hub(data)
 
     print("\n" + "─" * 52)
     print("📝  INSTAGRAM CAPTION — COPY AND PASTE BELOW:")
@@ -127,7 +129,8 @@ def main():
         print("✨ Done!")
         print(f"   → 📸 Carousel PNGs: {carousel_dir}/")
         print("   → 📋 Paste the caption above into Instagram")
-        print("   → 🔗 Update your bio link to: output/newsletters/")
+        print("   → 🌐 Hub page: docs/index.html  (bio link — never changes)")
+        print("   → 🔗 Bio URL:  https://graemewal777.github.io/abdn-insider/")
 
 
 if __name__ == "__main__":

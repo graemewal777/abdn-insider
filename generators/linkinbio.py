@@ -7,8 +7,31 @@ Output: output/newsletters/linkinbio-YYYY-MM-DD.html
 """
 
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
+
+# Import GA_TRACKING_ID from config if available
+try:
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from config import GA_TRACKING_ID
+except ImportError:
+    GA_TRACKING_ID = ""
+
+
+def _ga4_snippet(tracking_id: str) -> str:
+    """Return GA4 script tags if a tracking ID is configured."""
+    if not tracking_id:
+        return ""
+    return f"""
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={tracking_id}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){{dataLayer.push(arguments);}}
+        gtag('js', new Date());
+        gtag('config', '{tracking_id}');
+    </script>"""
 
 
 def _event_card(event: dict, index: int) -> str:
@@ -77,6 +100,7 @@ def generate_linkinbio(data: dict) -> str:
 
     events_html   = "\n".join(_event_card(e, i + 1) for i, e in enumerate(events))
     openings_html = "\n".join(_opening_card(o) for o in openings) if openings else ""
+    ga4_html      = _ga4_snippet(GA_TRACKING_ID)
 
     openings_section = ""
     if openings_html:
@@ -94,7 +118,7 @@ def generate_linkinbio(data: dict) -> str:
     <title>Aberdeen Insider — Week of {date_display}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">{ga4_html}
     <style>
         *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aberdeen Insider — Your City. This Week.</title>
+    <meta name="description" content="Aberdeen events, new openings and local tips — every Friday. No filler.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --pitch:     #0A0A0A;
+            --parchment: #F5F0E8;
+            --strike:    #FFE500;
+            --northsea:  #00C4CC;
+            --granite:   #8C8C8C;
+            --mist:      #EDE9E1;
+        }
+
+        html {
+            background: #1a1a1a;
+        }
+
+        body {
+            font-family: 'DM Mono', monospace;
+            background: var(--parchment);
+            color: var(--pitch);
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ── Header ────────────────────────────────────────── */
+        .header {
+            background: var(--pitch);
+            padding: 0 0 0 0;
+        }
+        .header-accent {
+            background: var(--strike);
+            height: 5px;
+        }
+        .header-inner {
+            padding: 24px 28px 22px;
+        }
+        .header-eyebrow {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--strike);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .header-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--parchment);
+            text-transform: uppercase;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+        }
+        .header-week {
+            font-size: 11px;
+            color: var(--granite);
+            letter-spacing: 0.1em;
+            margin-top: 10px;
+        }
+
+        /* ── Aberdeen Hero Card ────────────────────────────── */
+        .aberdeen-card {
+            background: var(--strike);
+            border: 4px solid var(--pitch);
+            margin: 20px 20px 0;
+            padding: 22px 24px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 16px;
+        }
+        .aberdeen-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+        }
+        .aberdeen-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            background: var(--pitch);
+            color: var(--strike);
+            padding: 4px 10px;
+            align-self: flex-start;
+            margin-bottom: 10px;
+        }
+        .aberdeen-badge::before {
+            content: '●';
+            font-size: 8px;
+        }
+        .aberdeen-city {
+            font-family: 'Syne', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 0.88;
+            letter-spacing: -0.03em;
+            color: var(--pitch);
+        }
+        .aberdeen-meta {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: var(--pitch);
+            margin-top: 12px;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+        .aberdeen-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-shrink: 0;
+            min-width: 80px;
+        }
+        .aberdeen-categories {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            opacity: 0.65;
+            margin-bottom: 16px;
+        }
+        .aberdeen-cta {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--pitch);
+            border-bottom: 2px solid var(--pitch);
+            padding-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        /* ── Coming-Soon City Rows ─────────────────────────── */
+        .cities-stack {
+            margin: 0 20px;
+            border-left: 4px solid var(--pitch);
+            border-right: 4px solid var(--pitch);
+        }
+        .city-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--mist);
+            border-bottom: 2px dashed var(--pitch);
+            padding: 16px 20px;
+            cursor: default;
+        }
+        .city-row:last-child {
+            border-bottom: none;
+        }
+        .city-row-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .city-row-num {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: var(--granite);
+            text-transform: uppercase;
+        }
+        .city-row-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .city-row-arrow {
+            font-size: 22px;
+            color: var(--granite);
+        }
+
+        /* ── Newsletter CTA ────────────────────────────────── */
+        .newsletter-cta {
+            background: var(--pitch);
+            margin: 20px 20px 0;
+            padding: 24px;
+            border: 3px solid var(--strike);
+        }
+        .cta-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--strike);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .cta-headline {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--parchment);
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .cta-body {
+            font-size: 13px;
+            color: var(--granite);
+            line-height: 1.7;
+            margin-bottom: 18px;
+        }
+        .cta-btn {
+            display: block;
+            text-align: center;
+            background: var(--strike);
+            color: var(--pitch);
+            font-family: 'DM Mono', monospace;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 14px 20px;
+        }
+
+        /* ── Footer ────────────────────────────────────────── */
+        .footer {
+            border-top: 3px solid var(--pitch);
+            margin: 20px 20px 0;
+            padding: 16px 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .footer-updated {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--granite);
+        }
+        .footer-cta {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            border-bottom: 1px solid var(--pitch);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header class="header">
+        <div class="header-accent"></div>
+        <div class="header-inner">
+            <div class="header-eyebrow">Insider</div>
+            <div class="header-title">Your City.<br>This Week.</div>
+            <div class="header-week">WK 11 · MAR 2026</div>
+        </div>
+    </header>
+
+    <!-- ── Aberdeen Hero ────────────────────────────────────── -->
+    <a href="linkinbio-2026-03-12.html" class="aberdeen-card">
+        <div class="aberdeen-left">
+            <div>
+                <div class="aberdeen-badge">Live This Week</div>
+                <div class="aberdeen-city">Aberdeen</div>
+            </div>
+            <div class="aberdeen-meta">
+                16 EVENTS · UPDATED FRI 12 MAR 2026<br>
+                SCOTLAND
+            </div>
+        </div>
+        <div class="aberdeen-right">
+            <div class="aberdeen-categories">
+                <span>Nights Out</span>
+                <span>Food</span>
+                <span>Events</span>
+                <span>New In</span>
+            </div>
+            <div class="aberdeen-cta">View All →</div>
+        </div>
+    </a>
+
+    <!-- ── Coming-Soon Cities ───────────────────────────────── -->
+    <div class="cities-stack">
+        
+    <a class="city-row" href="#">
+        <div class="city-row-left">
+            <span class="city-row-num">02 · COMING SOON</span>
+            <span class="city-row-name">GLASGOW</span>
+        </div>
+        <span class="city-row-arrow">→</span>
+    </a>
+    <a class="city-row" href="#">
+        <div class="city-row-left">
+            <span class="city-row-num">03 · COMING SOON</span>
+            <span class="city-row-name">EDINBURGH</span>
+        </div>
+        <span class="city-row-arrow">→</span>
+    </a>
+    <a class="city-row" href="#">
+        <div class="city-row-left">
+            <span class="city-row-num">04 · COMING SOON</span>
+            <span class="city-row-name">DUNDEE</span>
+        </div>
+        <span class="city-row-arrow">→</span>
+    </a>
+    </div>
+
+    <!-- ── Newsletter CTA ───────────────────────────────────── -->
+    <div class="newsletter-cta">
+        <div class="cta-label">Never Miss a Drop</div>
+        <div class="cta-headline">Get it in<br>your inbox.</div>
+        <p class="cta-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</p>
+        <a href="#" class="cta-btn">Subscribe Free →</a>
+    </div>
+
+    <!-- ── Footer ──────────────────────────────────────────── -->
+    <footer class="footer">
+        <span class="footer-updated">Updated every Friday</span>
+        <a href="mailto:hello@abdn.insider" class="footer-cta">Want your city? Get in touch →</a>
+    </footer>
+
+</body>
+</html>
