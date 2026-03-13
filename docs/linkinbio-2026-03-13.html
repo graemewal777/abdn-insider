@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aberdeen Insider — 13 MAR 2026</title>
+    <meta name="description" content="Aberdeen events this weekend — 13 MAR 2026. No filler.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJZF4K564G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-TJZF4K564G');
+    </script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --pitch:     #0A0A0A;
+            --parchment: #F5F0E8;
+            --strike:    #FFE500;
+            --northsea:  #00C4CC;
+            --granite:   #8C8C8C;
+            --mist:      #EDE9E1;
+        }
+
+        html { background: var(--pitch); }
+
+        body {
+            font-family: 'DM Mono', monospace;
+            background: var(--parchment);
+            color: var(--pitch);
+            max-width: 520px;
+            margin: 0 auto;
+            min-height: 100vh;
+            border-left: 2px solid var(--pitch);
+            border-right: 2px solid var(--pitch);
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ── Header ─────────────────────────────────── */
+        .header {
+            background: var(--pitch);
+        }
+        .header-stripe {
+            background: var(--strike);
+            height: 5px;
+        }
+        .header-inner {
+            padding: 24px 24px 22px;
+        }
+        .header-eyebrow {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--strike);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .header-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--parchment);
+            text-transform: uppercase;
+            line-height: 0.92;
+            letter-spacing: -0.02em;
+        }
+        .header-sub {
+            font-size: 12px;
+            color: var(--granite);
+            margin-top: 10px;
+            letter-spacing: 0.04em;
+        }
+
+        /* ── Section labels ─────────────────────────── */
+        .section-label {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding: 5px 12px;
+            margin: 20px 0 0 0;
+            background: var(--pitch);
+            color: var(--parchment);
+            border-bottom: 2px solid var(--pitch);
+            width: 100%;
+        }
+        .section-label.teal {
+            background: var(--northsea);
+            color: var(--pitch);
+        }
+
+        /* ── Event Cards ─────────────────────────────── */
+        .card {
+            padding: 20px 24px;
+            border-bottom: 2px solid var(--pitch);
+            background: var(--parchment);
+        }
+        .card-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .card-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+            color: var(--pitch);
+            opacity: 0.12;
+            min-width: 36px;
+        }
+        .card-cat {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--granite);
+            flex: 1;
+        }
+        .price {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            padding: 3px 9px;
+            white-space: nowrap;
+        }
+        .card-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+            margin-bottom: 8px;
+        }
+        .card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--granite);
+            margin-bottom: 12px;
+        }
+        .dot { opacity: 0.4; }
+        .vibe {
+            font-size: 13px;
+            font-style: italic;
+            border-left: 3px solid var(--strike);
+            padding-left: 12px;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            color: var(--pitch);
+        }
+        .ticket-btn {
+            display: block;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            border: 2px solid var(--pitch);
+        }
+        .btn-primary {
+            background: var(--strike);
+            color: var(--pitch);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--pitch);
+        }
+
+        /* ── Opening Cards ───────────────────────────── */
+        .card-opening {
+            background: var(--northsea);
+        }
+        .open-source {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            opacity: 0.6;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .open-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .open-body {
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }
+        .open-link {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--pitch);
+        }
+
+        /* ── Newsletter CTA ──────────────────────────── */
+        .newsletter {
+            background: var(--pitch);
+            padding: 28px 24px;
+            border-top: 3px solid var(--strike);
+            margin-top: 4px;
+        }
+        .nl-eyebrow {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--strike);
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .nl-headline {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--parchment);
+            text-transform: uppercase;
+            line-height: 1.0;
+            letter-spacing: -0.01em;
+            margin-bottom: 10px;
+        }
+        .nl-body {
+            font-size: 13px;
+            color: var(--granite);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .nl-btn {
+            display: block;
+            text-align: center;
+            background: var(--strike);
+            color: var(--pitch);
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 15px;
+        }
+
+        /* ── Footer ──────────────────────────────────── */
+        .footer {
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--pitch);
+        }
+        .footer-handle {
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .footer-note {
+            font-size: 11px;
+            color: var(--granite);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-stripe"></div>
+        <div class="header-inner">
+            <div class="header-eyebrow">WK 11 · MAR 2026</div>
+            <div class="header-title">Aberdeen<br>Insider</div>
+            <div class="header-sub">Your mate who knows what's good · Every Friday</div>
+        </div>
+    </header>
+
+    <div class="section-label">This Weekend</div>
+
+    
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">01</span>
+            <span class="card-cat">Nightlife</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£5+</span>
+        </div>
+        <h3 class="card-name">Source // Stef Davidse</h3>
+        <div class="card-meta">
+            <span>Motion Club</span>
+            <span class="dot">·</span>
+            <span>Fri 13–Sat 14 Mar</span>
+            <span class="dot">·</span>
+            <span>11:00 PM</span>
+        </div>
+        <p class="vibe">Classic Aberdeen big night. You know you want to.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Motion-Club/Source--Stef-Davidse/42081372/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">02</span>
+            <span class="card-cat">Family</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">Check website</span>
+        </div>
+        <h3 class="card-name">Comic Con Scotland (Aberdeen)</h3>
+        <div class="card-meta">
+            <span>P&J Live</span>
+            <span class="dot">·</span>
+            <span>Fri 13–Mon 16 Mar</span>
+            <span class="dot">·</span>
+            <span>9:00 AM</span>
+        </div>
+        <p class="vibe">Get the kids out — this one's worth the effort.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/P%26J-Live/Comic-Con-Scotland-Aberdeen/41447899/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">03</span>
+            <span class="card-cat">Comedy</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£15+</span>
+        </div>
+        <h3 class="card-name">Liam Farrelly</h3>
+        <div class="card-meta">
+            <span>Breakneck Comedy</span>
+            <span class="dot">·</span>
+            <span>Fri 13 Mar</span>
+            <span class="dot">·</span>
+            <span>7:30 PM</span>
+        </div>
+        <p class="vibe">Good comics come through Aberdeen more than people realise. Book it.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Breakneck-Comedy/Liam-Farrelly/41915680/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">04</span>
+            <span class="card-cat">Nightlife</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£15+</span>
+        </div>
+        <h3 class="card-name">Trashdisco Presents Graeme Park</h3>
+        <div class="card-meta">
+            <span>The Leys Hotel, Blackburn</span>
+            <span class="dot">·</span>
+            <span>Sat 14–Sun 15 Mar</span>
+            <span class="dot">·</span>
+            <span>9:30 AM</span>
+        </div>
+        <p class="vibe">One of those nights. Secure your ticket while they're still moving.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/The-Leys-Hotel%2C-Blackburn/Trashdisco-Presents-Graeme-Park/42082609/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">05</span>
+            <span class="card-cat">Festival</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£15+</span>
+        </div>
+        <h3 class="card-name">North Coast Fest - Aberdeen</h3>
+        <div class="card-meta">
+            <span>Tunnels Aberdeen</span>
+            <span class="dot">·</span>
+            <span>Sat 14 Mar</span>
+            <span class="dot">·</span>
+            <span>1:00 PM</span>
+        </div>
+        <p class="vibe">Aberdeen festival energy is rare — don't sleep on this one.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Tunnels-Aberdeen/North-Coast-Fest---Aberdeen/41410549/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">06</span>
+            <span class="card-cat">Nightlife</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£2+</span>
+        </div>
+        <h3 class="card-name">Motion Saturday's</h3>
+        <div class="card-meta">
+            <span>Motion Club</span>
+            <span class="dot">·</span>
+            <span>Sat 14–Sun 15 Mar</span>
+            <span class="dot">·</span>
+            <span>11:00 PM</span>
+        </div>
+        <p class="vibe">This one fills up fast — the kind of night people are still talking about Monday.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Motion-Club/Motion-Saturdays/42159370/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">07</span>
+            <span class="card-cat">Nightlife</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£5+</span>
+        </div>
+        <h3 class="card-name">Fine Times: Accident Machine / Roller Disco Death Party plus....</h3>
+        <div class="card-meta">
+            <span>Cheerz Nightclub</span>
+            <span class="dot">·</span>
+            <span>Sat 14–Sun 15 Mar</span>
+            <span class="dot">·</span>
+            <span>9:00 PM</span>
+        </div>
+        <p class="vibe">Aberdeen nights don't miss. Get tickets before it sells out.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Cheerz-Nightclub/Fine-Times-Accident-Machine--Roller-Disco-Death-Party-plus/41987451/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">08</span>
+            <span class="card-cat">Other</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£10+</span>
+        </div>
+        <h3 class="card-name">Eat, Drink & Play Mothers Eve 14/03- Buzz Bingo Aberdeen</h3>
+        <div class="card-meta">
+            <span>Buzz Bingo Aberdeen</span>
+            <span class="dot">·</span>
+            <span>Sat 14 Mar</span>
+            <span class="dot">·</span>
+            <span>1:00 PM</span>
+        </div>
+        <p class="vibe">Might just be the best thing you do this weekend.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Buzz-Bingo-Aberdeen/Eat-Drink--Play-Mothers-Eve-1403--Buzz-Bingo-Aberdeen/42141432/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">09</span>
+            <span class="card-cat">Nightlife</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£5+</span>
+        </div>
+        <h3 class="card-name">Bassology Promoters night</h3>
+        <div class="card-meta">
+            <span>491 Union Street</span>
+            <span class="dot">·</span>
+            <span>Sat 14–Sun 15 Mar</span>
+            <span class="dot">·</span>
+            <span>7:00 PM</span>
+        </div>
+        <p class="vibe">One of those nights. Secure your ticket while they're still moving.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/491-Union-Street/Bassology-Promoters-night/41997333/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">10</span>
+            <span class="card-cat">Comedy</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£15+</span>
+        </div>
+        <h3 class="card-name">Liam Farrelly</h3>
+        <div class="card-meta">
+            <span>Breakneck Comedy</span>
+            <span class="dot">·</span>
+            <span>Sat 14 Mar</span>
+            <span class="dot">·</span>
+            <span>7:30 PM</span>
+        </div>
+        <p class="vibe">Good comics come through Aberdeen more than people realise. Book it.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Breakneck-Comedy/Liam-Farrelly/41915681/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">11</span>
+            <span class="card-cat">Other</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£7+</span>
+        </div>
+        <h3 class="card-name">Great Scot: Free Walking Tour of Old Aberdeen</h3>
+        <div class="card-meta">
+            <span>Mercat Cross Outside Old Aberdeen Townhouse</span>
+            <span class="dot">·</span>
+            <span>Sat 14 Mar</span>
+            <span class="dot">·</span>
+            <span>11:00 AM</span>
+        </div>
+        <p class="vibe">Worth a look — don't let it pass you by.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Mercat-Cross-Outside-Old-Aberdeen-Townhouse/Great-Scot-Free-Walking-Tour-of-Old-Aberdeen/42158231/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">12</span>
+            <span class="card-cat">Other</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">£10+</span>
+        </div>
+        <h3 class="card-name">Aberdeen City Centre Free Walking Tour</h3>
+        <div class="card-meta">
+            <span>Mercat Cross</span>
+            <span class="dot">·</span>
+            <span>Sun 15 Mar</span>
+            <span class="dot">·</span>
+            <span>11:00 AM</span>
+        </div>
+        <p class="vibe">Worth a look — don't let it pass you by.</p>
+        <a href="https://www.skiddle.com/whats-on/Aberdeen/Mercat-Cross/Aberdeen-City-Centre-Free-Walking-Tour/42158232/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">13</span>
+            <span class="card-cat">Arts</span>
+            <span class="price" style="background:#FFE500;color:#0A0A0A;">Check website</span>
+        </div>
+        <h3 class="card-name">Paul Merton & Suki Webster's Improv Show</h3>
+        <div class="card-meta">
+            <span>Aberdeen Music Hall</span>
+            <span class="dot">·</span>
+            <span>Fri 13 Mar</span>
+            <span class="dot">·</span>
+            <span>8:00 PM</span>
+        </div>
+        <p class="vibe">Proper culture in Aberdeen. Worth the ticket price.</p>
+        <a href="https://www.ticketmaster.co.uk/paul-merton-suki-websters-improv-show-aberdeen-13-03-2026/event/3600625AD11F5D32" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">14</span>
+            <span class="card-cat">event</span>
+            
+        </div>
+        <h3 class="card-name">Aberdeen Jazz Festival set to host unique concerts at the Victorian Toilets in Union Terrace and Bon Accord Baths</h3>
+        <div class="card-meta">
+            <span>Press and Journal</span>
+            <span class="dot">·</span>
+            <span>Thu 12 Mar</span>
+            <span class="dot">·</span>
+            <span></span>
+        </div>
+        
+        <a href="https://www.pressandjournal.co.uk/fp/entertainment/6975055/aberdeen-jazz-festival-victorian-toilets-unique-venue/" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">15</span>
+            <span class="card-cat">event</span>
+            
+        </div>
+        <h3 class="card-name">Aberdeen Jazz Festival tunes up for sell-out success as popular event returns for 23rd year</h3>
+        <div class="card-meta">
+            <span>Aberdeen Live</span>
+            <span class="dot">·</span>
+            <span>Thu 12 Mar</span>
+            <span class="dot">·</span>
+            <span></span>
+        </div>
+        
+        <a href="https://www.aberdeenlive.news/news/aberdeen-news/aberdeen-jazz-festival-tunes-up-10861864" target="_blank" rel="noopener" class="ticket-btn btn-primary">Get Tickets →</a>
+    </article>
+
+    
+
+    <div class="newsletter">
+        <div class="nl-eyebrow">Never Miss a Drop</div>
+        <div class="nl-headline">Get it in<br>your inbox.</div>
+        <p class="nl-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</p>
+        <a href="https://abdn-insider.beehiiv.com/subscribe" target="_blank" class="nl-btn">Subscribe Free →</a>
+    </div>
+
+    <footer class="footer">
+        <span class="footer-handle">@abdn.insider</span>
+        <span class="footer-note">Updated every Friday</span>
+    </footer>
+
+</body>
+</html>

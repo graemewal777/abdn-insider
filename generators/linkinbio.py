@@ -1,9 +1,9 @@
 """
 Aberdeen Insider — Link-in-Bio Page Generator
-Generates a mobile-first HTML page each week with all events + affiliate
-ticket links + new openings. Lives at your bio URL, updated every Friday.
+Generates a mobile-first HTML page each week: events + affiliate links.
+Saved to docs/ for GitHub Pages serving.
 
-Output: output/newsletters/linkinbio-YYYY-MM-DD.html
+Output: docs/linkinbio-YYYY-MM-DD.html
 """
 
 import json
@@ -11,7 +11,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# Import GA_TRACKING_ID from config if available
 try:
     sys.path.insert(0, str(Path(__file__).parent.parent))
     from config import GA_TRACKING_ID
@@ -20,11 +19,9 @@ except ImportError:
 
 
 def _ga4_snippet(tracking_id: str) -> str:
-    """Return GA4 script tags if a tracking ID is configured."""
     if not tracking_id:
         return ""
     return f"""
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={tracking_id}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -35,90 +32,91 @@ def _ga4_snippet(tracking_id: str) -> str:
 
 
 def _event_card(event: dict, index: int) -> str:
-    price = event.get("price", "")
-    price_bg = "#FFE500" if price != "Free" else "#0A0A0A"
-    price_color = "#0A0A0A" if price != "Free" else "#FFE500"
-
+    price     = event.get("price", "")
+    is_free   = price == "Free"
     ticket_url = event.get("url", "")
-    ticket_btn = ""
-    if ticket_url:
-        label = "Get Tickets" if price != "Free" else "More Info"
-        ticket_btn = f"""
-        <a href="{ticket_url}" target="_blank" rel="noopener" class="ticket-btn">
-            {label} →
-        </a>"""
+    category  = event.get("category", "")
+    vibe      = event.get("vibe_note", "")
 
-    vibe = event.get("vibe_note", "")
+    price_html = ""
+    if price:
+        bg  = "#0A0A0A" if is_free else "#FFE500"
+        col = "#FFE500" if is_free else "#0A0A0A"
+        price_html = f'<span class="price" style="background:{bg};color:{col};">{price}</span>'
+
     vibe_html = f'<p class="vibe">{vibe}</p>' if vibe else ""
 
+    btn_html = ""
+    if ticket_url:
+        label = "Free — More Info →" if is_free else "Get Tickets →"
+        btn_class = "btn-secondary" if is_free else "btn-primary"
+        btn_html = f'<a href="{ticket_url}" target="_blank" rel="noopener" class="ticket-btn {btn_class}">{label}</a>'
+
     return f"""
-    <div class="event-card">
-        <div class="event-header">
-            <span class="event-num">{index:02d}</span>
-            <span class="event-category">{event.get("category", "")}</span>
+    <article class="card">
+        <div class="card-top">
+            <span class="card-num">{index:02d}</span>
+            <span class="card-cat">{category}</span>
+            {price_html}
         </div>
-        <h3 class="event-name">{event.get("name", "")}</h3>
-        <div class="event-meta">
-            <span class="meta-item">{event.get("venue", "")}</span>
-            <span class="meta-dot">·</span>
-            <span class="meta-item">{event.get("date", "")}</span>
-            <span class="meta-dot">·</span>
-            <span class="meta-item">{event.get("time", "")}</span>
-            <span class="price-tag" style="background:{price_bg};color:{price_color};">{price}</span>
+        <h3 class="card-name">{event.get("name", "")}</h3>
+        <div class="card-meta">
+            <span>{event.get("venue", "")}</span>
+            <span class="dot">·</span>
+            <span>{event.get("date", "")}</span>
+            <span class="dot">·</span>
+            <span>{event.get("time", "")}</span>
         </div>
         {vibe_html}
-        {ticket_btn}
-    </div>"""
+        {btn_html}
+    </article>"""
 
 
 def _opening_card(item: dict) -> str:
     url = item.get("url", "")
-    link_html = ""
-    if url:
-        link_html = f'<a href="{url}" target="_blank" rel="noopener" class="read-more">Read more →</a>'
-
+    link_html = f'<a href="{url}" target="_blank" rel="noopener" class="open-link">Read more →</a>' if url else ""
     return f"""
-    <div class="opening-card">
-        <span class="opening-source">{item.get("source", "")}</span>
-        <h3 class="opening-title">{item.get("title", "")}</h3>
-        <p class="opening-summary">{item.get("summary", "")[:200]}{"…" if len(item.get("summary","")) > 200 else ""}</p>
+    <article class="card card-opening">
+        <span class="open-source">{item.get("source", "")}</span>
+        <h3 class="open-title">{item.get("title", "")}</h3>
+        <p class="open-body">{item.get("summary", "")[:200]}{"…" if len(item.get("summary","")) > 200 else ""}</p>
         {link_html}
-    </div>"""
+    </article>"""
 
 
 def generate_linkinbio(data: dict) -> str:
-    """Generate the link-in-bio HTML page and return the output path."""
-
-    week_of = data.get("week_of", datetime.now().strftime("%Y-%m-%d"))
+    week_of  = data.get("week_of", datetime.now().strftime("%Y-%m-%d"))
     events   = data.get("events", [])
     openings = data.get("openings", [])
 
     try:
-        date_display = datetime.strptime(week_of, "%Y-%m-%d").strftime("%-d %B %Y")
+        dt           = datetime.strptime(week_of, "%Y-%m-%d")
+        date_display = dt.strftime("%-d %b %Y").upper()
+        week_label   = f"WK {dt.isocalendar()[1]} · {dt.strftime('%b %Y').upper()}"
     except ValueError:
-        date_display = week_of
+        date_display = week_of.upper()
+        week_label   = week_of.upper()
 
-    events_html   = "\n".join(_event_card(e, i + 1) for i, e in enumerate(events))
-    openings_html = "\n".join(_opening_card(o) for o in openings) if openings else ""
-    ga4_html      = _ga4_snippet(GA_TRACKING_ID)
+    events_html = "\n".join(_event_card(e, i + 1) for i, e in enumerate(events))
+    ga4_html    = _ga4_snippet(GA_TRACKING_ID)
 
     openings_section = ""
-    if openings_html:
+    if openings:
+        cards = "\n".join(_opening_card(o) for o in openings)
         openings_section = f"""
-    <section class="section">
-        <div class="section-label teal">New In Aberdeen</div>
-        {openings_html}
-    </section>"""
+    <div class="section-label teal">New In Aberdeen</div>
+    {cards}"""
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aberdeen Insider — Week of {date_display}</title>
+    <title>Aberdeen Insider — {date_display}</title>
+    <meta name="description" content="Aberdeen events this weekend — {date_display}. No filler.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">{ga4_html}
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">{ga4_html}
     <style>
         *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
@@ -128,272 +126,283 @@ def generate_linkinbio(data: dict) -> str:
             --strike:    #FFE500;
             --northsea:  #00C4CC;
             --granite:   #8C8C8C;
-            --alert:     #FF3B30;
+            --mist:      #EDE9E1;
         }}
 
-        /* Dark surround on desktop — looks like a phone frame */
-        html {{
-            background: #1a1a1a;
-        }}
+        html {{ background: var(--pitch); }}
 
         body {{
             font-family: 'DM Mono', monospace;
-            font-size: 15px;          /* DM Mono needs bigger base than proportional fonts */
-            line-height: 1.6;
             background: var(--parchment);
             color: var(--pitch);
-            max-width: 480px;
+            max-width: 520px;
             margin: 0 auto;
             min-height: 100vh;
+            border-left: 2px solid var(--pitch);
+            border-right: 2px solid var(--pitch);
         }}
 
-        /* ── Header ─────────────────────────────── */
+        a {{ text-decoration: none; color: inherit; }}
+
+        /* ── Header ─────────────────────────────────── */
         .header {{
             background: var(--pitch);
-            padding: 32px 28px 28px;
-            border-bottom: 4px solid var(--strike);
         }}
-        .header-meta {{
+        .header-stripe {{
+            background: var(--strike);
+            height: 5px;
+        }}
+        .header-inner {{
+            padding: 24px 24px 22px;
+        }}
+        .header-eyebrow {{
             font-size: 11px;
             font-weight: 500;
             color: var(--strike);
-            letter-spacing: 0.14em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }}
         .header-title {{
             font-family: 'Syne', sans-serif;
-            font-size: 42px;
+            font-size: 40px;
             font-weight: 800;
             color: var(--parchment);
-            line-height: 0.92;
             text-transform: uppercase;
+            line-height: 0.92;
             letter-spacing: -0.02em;
         }}
         .header-sub {{
-            font-size: 13px;
+            font-size: 12px;
             color: var(--granite);
-            margin-top: 14px;
-            line-height: 1.6;
+            margin-top: 10px;
+            letter-spacing: 0.04em;
         }}
 
-        /* ── Sections ────────────────────────────── */
-        .section {{
-            padding: 0 0 12px;
-        }}
+        /* ── Section labels ─────────────────────────── */
         .section-label {{
             display: inline-block;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            padding: 6px 14px;
-            margin: 24px 28px 0;
+            padding: 5px 12px;
+            margin: 20px 0 0 0;
             background: var(--pitch);
             color: var(--parchment);
+            border-bottom: 2px solid var(--pitch);
+            width: 100%;
         }}
         .section-label.teal {{
             background: var(--northsea);
             color: var(--pitch);
         }}
 
-        /* ── Event Cards ─────────────────────────── */
-        .event-card {{
+        /* ── Event Cards ─────────────────────────────── */
+        .card {{
+            padding: 20px 24px;
             border-bottom: 2px solid var(--pitch);
-            padding: 22px 28px;
+            background: var(--parchment);
         }}
-        .event-header {{
+        .card-top {{
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
         }}
-        .event-num {{
+        .card-num {{
             font-family: 'Syne', sans-serif;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
-            color: var(--pitch);
-            opacity: 0.15;
             line-height: 1;
+            color: var(--pitch);
+            opacity: 0.12;
+            min-width: 36px;
         }}
-        .event-category {{
+        .card-cat {{
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--granite);
+            flex: 1;
+        }}
+        .price {{
             font-size: 11px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--granite);
+            letter-spacing: 0.06em;
+            padding: 3px 9px;
+            white-space: nowrap;
         }}
-        .event-name {{
+        .card-name {{
             font-family: 'Syne', sans-serif;
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 800;
             text-transform: uppercase;
             line-height: 1.05;
             letter-spacing: -0.01em;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }}
-        .event-meta {{
+        .card-meta {{
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            margin-bottom: 14px;
-        }}
-        .meta-dot {{ color: var(--granite); }}
-        .price-tag {{
+            gap: 5px;
             font-size: 12px;
-            font-weight: 500;
-            padding: 3px 8px;
-            margin-left: 4px;
+            color: var(--granite);
+            margin-bottom: 12px;
         }}
+        .dot {{ opacity: 0.4; }}
         .vibe {{
             font-size: 13px;
             font-style: italic;
-            color: var(--pitch);
             border-left: 3px solid var(--strike);
             padding-left: 12px;
-            line-height: 1.65;
-            margin-bottom: 16px;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            color: var(--pitch);
         }}
         .ticket-btn {{
             display: block;
             text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 13px 16px;
+            border: 2px solid var(--pitch);
+        }}
+        .btn-primary {{
             background: var(--strike);
             color: var(--pitch);
-            font-family: 'DM Mono', monospace;
-            font-size: 14px;
+        }}
+        .btn-secondary {{
+            background: transparent;
+            color: var(--pitch);
+        }}
+
+        /* ── Opening Cards ───────────────────────────── */
+        .card-opening {{
+            background: var(--northsea);
+        }}
+        .open-source {{
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--pitch);
+            opacity: 0.6;
+            display: block;
+            margin-bottom: 6px;
+        }}
+        .open-title {{
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }}
+        .open-body {{
+            font-size: 13px;
+            line-height: 1.65;
+            margin-bottom: 12px;
+        }}
+        .open-link {{
+            font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.06em;
             text-transform: uppercase;
-            text-decoration: none;
-            padding: 14px 20px;
-            border: 2px solid var(--pitch);
+            border-bottom: 2px solid var(--pitch);
+        }}
+
+        /* ── Newsletter CTA ──────────────────────────── */
+        .newsletter {{
+            background: var(--pitch);
+            padding: 28px 24px;
+            border-top: 3px solid var(--strike);
             margin-top: 4px;
         }}
-        .ticket-btn:active {{ background: var(--pitch); color: var(--strike); }}
-
-        /* ── Opening Cards ───────────────────────── */
-        .opening-card {{
-            background: var(--northsea);
-            border-bottom: 2px solid var(--pitch);
-            padding: 22px 28px;
-        }}
-        .opening-source {{
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--pitch);
-            opacity: 0.7;
-        }}
-        .opening-title {{
-            font-family: 'Syne', sans-serif;
-            font-size: 19px;
-            font-weight: 800;
-            text-transform: uppercase;
-            line-height: 1.1;
-            margin: 8px 0 10px;
-        }}
-        .opening-summary {{
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--pitch);
-            margin-bottom: 14px;
-        }}
-        .read-more {{
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--pitch);
-            text-decoration: none;
-            border-bottom: 2px solid var(--pitch);
-        }}
-
-        /* ── Newsletter CTA ──────────────────────── */
-        .newsletter-cta {{
-            background: var(--pitch);
-            margin: 24px 28px;
-            padding: 28px;
-            border: 3px solid var(--strike);
-        }}
-        .cta-label {{
-            font-size: 11px;
+        .nl-eyebrow {{
+            font-size: 10px;
             font-weight: 500;
             color: var(--strike);
-            letter-spacing: 0.14em;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }}
-        .cta-headline {{
+        .nl-headline {{
             font-family: 'Syne', sans-serif;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--parchment);
             text-transform: uppercase;
-            line-height: 1.1;
+            line-height: 1.0;
+            letter-spacing: -0.01em;
             margin-bottom: 10px;
         }}
-        .cta-body {{
+        .nl-body {{
             font-size: 13px;
             color: var(--granite);
             line-height: 1.7;
             margin-bottom: 20px;
         }}
-        .cta-btn {{
+        .nl-btn {{
             display: block;
             text-align: center;
             background: var(--strike);
             color: var(--pitch);
-            font-family: 'DM Mono', monospace;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            text-decoration: none;
-            padding: 16px 20px;
+            padding: 15px;
         }}
 
-        /* ── Footer ──────────────────────────────── */
+        /* ── Footer ──────────────────────────────────── */
         .footer {{
-            border-top: 3px solid var(--pitch);
-            padding: 22px 28px;
-            margin-top: 4px;
+            padding: 18px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-top: 2px solid var(--pitch);
         }}
         .footer-handle {{
             font-family: 'Syne', sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             text-transform: uppercase;
         }}
         .footer-note {{
-            font-size: 12px;
+            font-size: 11px;
             color: var(--granite);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }}
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="header-meta">Week of {date_display}</div>
-        <div class="header-title">Aberdeen<br>Insider</div>
-        <div class="header-sub">Your mate who knows what's good.<br>Every Friday — no filler.</div>
+        <div class="header-stripe"></div>
+        <div class="header-inner">
+            <div class="header-eyebrow">{week_label}</div>
+            <div class="header-title">Aberdeen<br>Insider</div>
+            <div class="header-sub">Your mate who knows what's good · Every Friday</div>
+        </div>
     </header>
 
-    <section class="section">
-        <div class="section-label">This Weekend</div>
-        {events_html}
-    </section>
+    <div class="section-label">This Weekend</div>
+
+    {events_html}
 
     {openings_section}
 
-    <div class="newsletter-cta">
-        <div class="cta-label">Never Miss a Drop</div>
-        <div class="cta-headline">Get it in your inbox every Friday.</div>
-        <p class="cta-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</p>
-        <a href="#" class="cta-btn">Subscribe Free →</a>
+    <div class="newsletter">
+        <div class="nl-eyebrow">Never Miss a Drop</div>
+        <div class="nl-headline">Get it in<br>your inbox.</div>
+        <p class="nl-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</p>
+        <a href="https://abdn-insider.beehiiv.com/subscribe" target="_blank" class="nl-btn">Subscribe Free →</a>
     </div>
 
     <footer class="footer">
@@ -404,15 +413,12 @@ def generate_linkinbio(data: dict) -> str:
 </body>
 </html>"""
 
-    # Save to output/newsletters/ (local archive)
     output_dir = Path("output/newsletters")
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"linkinbio-{week_of}.html"
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    # Also save to docs/ — served by GitHub Pages
-    # URL: https://graemewal777.github.io/abdn-insider/linkinbio-YYYY-MM-DD.html
     docs_dir = Path("docs")
     docs_dir.mkdir(exist_ok=True)
     docs_path = docs_dir / f"linkinbio-{week_of}.html"
