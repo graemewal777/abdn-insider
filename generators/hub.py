@@ -163,6 +163,7 @@ def generate_hub(data: dict) -> str:
       display: flex;
       flex-direction: column;
       gap: 20px;
+      overflow: hidden;
     }}
     .hero-top {{
       display: flex;
@@ -198,11 +199,11 @@ def generate_hub(data: dict) -> str:
     }}
     .hero-city {{
       font-family: 'Syne', sans-serif;
-      font-size: 128px;
+      font-size: 96px;
       font-weight: 800;
       text-transform: uppercase;
       line-height: 0.85;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.03em;
       color: var(--pitch);
     }}
     .hero-bottom {{
@@ -417,7 +418,7 @@ def generate_hub(data: dict) -> str:
     </div>
     <div class="newsletter-right">
       <div class="newsletter-body">Free weekly newsletter. Aberdeen events, new openings, local tips. Under 3 minutes to read.</div>
-      <a href="#" class="newsletter-btn">Subscribe Free →</a>
+      <a href="https://abdn-insider.beehiiv.com/subscribe" class="newsletter-btn" target="_blank">Subscribe Free →</a>
     </div>
   </div>
 
